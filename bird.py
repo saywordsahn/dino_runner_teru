@@ -2,14 +2,21 @@ import pygame
 
 class Bird:
 
-    def __init__(self):
-        self.x = 400
-        self.y = 260
-        self.FLYING = [pygame.image.load('assets/Bird/Bird1.png'), pygame.image.load('assets/Bird/Bird2.png')]
+    def __init__(self, width):
 
-    def update(self, game_speed, width):
-        self.x -= game_speed
+        self.FLAPPING = [pygame.image.load('assets/Bird/Bird1.png'),
+                    pygame.image.load('assets/Bird/Bird2.png')]
+        self.image = self.FLAPPING[0]
+        self.rect = self.image.get_rect()
+        self.width = width
+        self.rect.x = width
+        self.rect.y = 290
+        self.bird_animation_speed = 20
 
-        if self.x + self.FLYING[0].get_width() < 0:
-            self.x = width
+    def update(self, step, game_speed):
+        self.image = self.FLAPPING[(step // self.bird_animation_speed) % len(self.FLAPPING)]
 
+        self.rect.x -= game_speed
+
+        if self.rect.right < 0:
+            self.rect.x = self.width
