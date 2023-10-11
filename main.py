@@ -21,12 +21,15 @@ bird_animation_speed = 20
 # objects
 dino = Dino()
 bird = Bird(WIDTH)
+obstacle_group = pygame.sprite.Group()
+obstacle_group.add(bird)
 
 x_pos_bg = 0
 y_pos_bg = 380
 
 step = 0
-game_speed = 5
+game_speed = 10
+game_over = False
 
 def background():
     global x_pos_bg, y_pos_bg
@@ -56,12 +59,20 @@ while True:
     dino.update(step)
     bird.update(step, game_speed)
 
+    # check for collision
+    if dino.rect.colliderect(bird.rect):
+        # change the dino's image to DinoDead.png
+        dino.image = dino.DEAD
+        game_over = True
+
+
 
     # draw
     screen.fill(0)
     background()
 
     screen.blit(dino.image, (dino.rect.x, dino.rect.y))
-    screen.blit(bird.image, (bird.rect.x, bird.rect.y))
+    # screen.blit(bird.image, (bird.rect.x, bird.rect.y))
+    obstacle_group.draw(screen)
 
     pygame.display.update()

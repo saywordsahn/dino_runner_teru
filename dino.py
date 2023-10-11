@@ -10,10 +10,13 @@ class Dino:
         self.DUCKING = [pygame.image.load('assets/Dino/DinoDuck1.png'),
                    pygame.image.load('assets/Dino/DinoDuck2.png')]
 
+        self.DEAD = pygame.image.load('assets/Dino/DinoDead.png')
+
         self.image = self.RUNNING[0]
         self.rect = self.image.get_rect()
         self.rect.x = 80
         self.rect.y = 310
+        self.starting_y = 310
         self.jump_velocity = 20
         self.dino_animation_speed = 20
 
@@ -29,6 +32,13 @@ class Dino:
         elif self.jumping:
             self.rect.y -= self.jump_velocity
             self.jump_velocity -= 1
+
+            if self.rect.y > self.starting_y:
+                self.rect.y = self.starting_y
+                self.running = True
+                self.jumping = False
+                self.jump_velocity = 20
+
         else:
             self.rect.y = 340
             self.image = self.DUCKING[(step // self.dino_animation_speed) % len(self.DUCKING)]
@@ -36,7 +46,7 @@ class Dino:
 
     def input(self, keys):
 
-        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and not self.jumping:
             self.ducking = True
             self.running = False
             self.jumping = False
@@ -44,7 +54,7 @@ class Dino:
             self.ducking = False
             self.running = False
             self.jumping = True
-        else:
+        elif not self.jumping:
             self.ducking = False
             self.running = True
             self.jumping = False

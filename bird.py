@@ -1,9 +1,9 @@
 import pygame
 
-class Bird:
+class Bird(pygame.sprite.Sprite):
 
     def __init__(self, width):
-
+        pygame.sprite.Sprite.__init__(self)
         self.FLAPPING = [pygame.image.load('assets/Bird/Bird1.png'),
                     pygame.image.load('assets/Bird/Bird2.png')]
         self.image = self.FLAPPING[0]
