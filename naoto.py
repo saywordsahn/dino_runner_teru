@@ -1,5 +1,6 @@
 import pgzrun
 from enum import Enum
+import random as rand
 
 WIDTH = 1100
 HEIGHT = 600
@@ -16,6 +17,17 @@ class PlayerState(Enum):
 RUNNING = ['dinorun1', 'dinorun2']
 FLAPPING = ['bird1', 'bird2']
 
+# todo: ducking
+# todo: collision
+# todo:     death / game over
+# todo: game speed
+# todo: clouds
+# todo:     clouds have a random height
+# todo:     clouds are generated on a % chance
+# todo:     where should we store clouds?
+# todo:     when should we create clouds?
+# todo: OBJECTS!
+
 
 # class Player(Actor):
 #
@@ -28,12 +40,10 @@ FLAPPING = ['bird1', 'bird2']
 
 cactus = Actor('smallcactus2', (WIDTH / 2, 438))
 
-
 bird = Actor('bird1', (WIDTH / 2, HEIGHT / 2))
 bird.animation_length = 0.4
 bird.last_animation_changed = 0.0
 bird.frame_count = 0
-
 
 dino = Actor('dinorun1', (90, DINO_STARTING_Y))
 dino.animation_length = 0.2
@@ -41,6 +51,17 @@ dino.last_animation_changed = 0.0
 dino.frame_count = 0
 dino.state = PlayerState.RUNNING
 dino.jump_velocity = 0.0
+
+
+#############
+# CLOUDS
+#############
+clouds = []
+cloud_speed = 2.0
+cloud_min_y = 140
+cloud_max_y = 400
+cloud_cooldown = 2.0
+cloud_last_spawned_time = 0.0
 
 
 time = 0
@@ -54,6 +75,10 @@ def draw():
     screen.fill(WHITE)
     screen.blit('track', (track_x, track_y))
     screen.blit('track', (track2_x, track_y))
+
+    for cloud in clouds:
+        cloud.draw()
+
     dino.draw()
     bird.draw()
     cactus.draw()
@@ -91,13 +116,17 @@ def update_dino(time, dt):
             dino.y = DINO_STARTING_Y
             dino.state = PlayerState.RUNNING
 
+def update_clouds(time):
+    global cloud_last_spawned_time
 
+    # spawn clouds
+    if time - cloud_last_spawned_time > cloud_cooldown:
+        clouds.append(Actor('cloud', (WIDTH, rand.randint(cloud_min_y, cloud_max_y))))
+        cloud_last_spawned_time = time
 
-
-
-
-
-
+    # move cloud
+    for cloud in clouds:
+        cloud.x -= cloud_speed
 
 def update(dt):
     global time
@@ -106,7 +135,7 @@ def update(dt):
 
     update_track()
     update_dino(time, dt)
-
+    update_clouds(time)
 
     if time - bird.last_animation_changed > bird.animation_length:
         bird.frame_count += 1
