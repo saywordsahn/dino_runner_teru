@@ -1,11 +1,11 @@
 import pygame
 
-class Dino:
+class Dino(pygame.sprite.Sprite):
 
     def __init__(self):
-
-        self.RUNNING = [pygame.image.load('assets/Dino/DinoRun1.png'),
-                   pygame.image.load('assets/Dino/DinoRun2.png')]
+        pygame.sprite.Sprite.__init__(self)
+        self.RUNNING = [pygame.image.load('images/dinorun1.png'),
+                        pygame.image.load('images/dinorun2.png')]
 
         self.DUCKING = [pygame.image.load('assets/Dino/DinoDuck1.png'),
                    pygame.image.load('assets/Dino/DinoDuck2.png')]

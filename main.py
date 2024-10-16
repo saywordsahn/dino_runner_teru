@@ -1,6 +1,7 @@
 import pygame
 from dino import Dino
 from bird import Bird
+from cactus import Cactus
 
 
 pygame.init()
@@ -12,7 +13,7 @@ fps = 60
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
-TRACK = pygame.image.load('assets/Other/Track.png')
+TRACK = pygame.image.load('images/track.png')
 
 # animation speeds
 bird_animation_speed = 20
@@ -20,9 +21,15 @@ bird_animation_speed = 20
 
 # objects
 dino = Dino()
+player_group = pygame.sprite.Group()
+player_group.add(dino)
+
 bird = Bird(WIDTH)
 obstacle_group = pygame.sprite.Group()
 obstacle_group.add(bird)
+
+cactus = Cactus(WIDTH)
+obstacle_group.add(cactus)
 
 x_pos_bg = 0
 y_pos_bg = 380
@@ -47,6 +54,7 @@ while True:
     time = clock.tick(fps)
     # input
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             pygame.quit()
             exit(0)
@@ -58,6 +66,7 @@ while True:
     # update
     dino.update(step)
     bird.update(step, game_speed)
+    cactus.update(step, game_speed)
 
     # check for collision
     if dino.rect.colliderect(bird.rect):
@@ -71,8 +80,7 @@ while True:
     screen.fill(0)
     background()
 
-    screen.blit(dino.image, (dino.rect.x, dino.rect.y))
-    # screen.blit(bird.image, (bird.rect.x, bird.rect.y))
     obstacle_group.draw(screen)
+    player_group.draw(screen)
 
     pygame.display.update()
