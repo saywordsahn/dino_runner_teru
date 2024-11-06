@@ -7,8 +7,10 @@ HEIGHT = 600
 WHITE = (255, 255, 255)
 GRAVITY = 100.0
 STARTING_SPEED = 9
+SPEED_INCREASE_AMOUNT = 0.3
 JUMP_POWER = -30.0
 DINO_STARTING_Y = 425
+
 
 class PlayerState(Enum):
     RUNNING = 1
@@ -24,13 +26,13 @@ RUNNING = ['dinorun1', 'dinorun2']
 FLAPPING = ['bird1', 'bird2']
 
 # todo: ducking
-# todo: start screen
+# todo: different obstacle types
 # todo: OBJECTS!
-# todo: score - fix orientation
 # todo: score - high score
-# todo: score - reset
-# todo: score - stop on game over
+# todo: score - fix orientation
 # todo: score - font
+# todo: start screen
+
 
 # candidates for next
 # 1. power up jumping game
@@ -94,13 +96,14 @@ def reset_dino():
     dino.jump_velocity = 0.0
 
 def reset():
-    global game_state, clouds, speed
+    global game_state, clouds, speed, score
 
     game_state = GameState.PLAYING
     reset_dino()
     cactus.left = WIDTH
     clouds = []
     speed = STARTING_SPEED
+    score = 0
 
 
 def draw():
@@ -151,8 +154,6 @@ def handle_collision():
         game_state = GameState.GAME_OVER
 
 
-
-
 def update_dino(time, dt):
 
     if dino.state == PlayerState.RUNNING:
@@ -162,9 +163,12 @@ def update_dino(time, dt):
             dino.image = RUNNING[dino.frame_count % len(RUNNING)]
             dino.last_animation_changed = time
 
-        if keyboard.SPACE:
+        if keyboard.SPACE or keyboard.UP or keyboard.W:
             dino.state = PlayerState.JUMPING
             dino.jump_velocity = JUMP_POWER
+
+        if keyboard.S or keyboard.DOWN:
+            print('duck')
 
     else:
         dino.jump_velocity += GRAVITY * dt
@@ -202,10 +206,10 @@ def update(dt):
     time += dt
 
     if time - last_speed_increase >= 1.0:
-        speed += .3
+        speed += SPEED_INCREASE_AMOUNT
         last_speed_increase = time
 
-    if time - last_score_update > 0.1:
+    if game_state == GameState.PLAYING and time - last_score_update > 0.1:
         score += 1
         last_score_update = time
 
