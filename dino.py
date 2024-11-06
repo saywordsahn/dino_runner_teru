@@ -10,7 +10,7 @@ class Dino(pygame.sprite.Sprite):
         self.DUCKING = [pygame.image.load('assets/Dino/DinoDuck1.png'),
                    pygame.image.load('assets/Dino/DinoDuck2.png')]
 
-        self.DEAD = pygame.image.load('assets/Dino/DinoDead.png')
+        self.DEAD = pygame.image.load('images/dinodead.png')
 
         self.image = self.RUNNING[0]
         self.rect = self.image.get_rect()

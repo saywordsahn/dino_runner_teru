@@ -70,7 +70,7 @@ while True:
 
     # check for collision
     if dino.rect.colliderect(bird.rect):
-        # change the dino's image to DinoDead.png
+        # change the dino's image to dinodead.png
         dino.image = dino.DEAD
         game_over = True
 
