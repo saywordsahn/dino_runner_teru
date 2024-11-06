@@ -242,7 +242,7 @@ def update(dt):
     update_track()
     update_dino(time, dt)
     update_clouds(time)
-    # update_cactus()
+    update_cactus()
     handle_collision()
 
 
