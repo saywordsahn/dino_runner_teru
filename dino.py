@@ -7,8 +7,8 @@ class Dino(pygame.sprite.Sprite):
         self.RUNNING = [pygame.image.load('images/dinorun1.png'),
                         pygame.image.load('images/dinorun2.png')]
 
-        self.DUCKING = [pygame.image.load('assets/Dino/DinoDuck1.png'),
-                   pygame.image.load('assets/Dino/DinoDuck2.png')]
+        self.DUCKING = [pygame.image.load('images/dinoduck1.png'),
+                        pygame.image.load('images/dinoduck2.png')]
 
         self.DEAD = pygame.image.load('images/dinodead.png')
 

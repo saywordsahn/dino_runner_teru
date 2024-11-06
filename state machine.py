@@ -10,6 +10,7 @@ STARTING_SPEED = 9
 SPEED_INCREASE_AMOUNT = 0.3
 JUMP_POWER = -30.0
 DINO_STARTING_Y = 425
+DINO_CROUCHING_Y = 450
 
 
 class PlayerState(Enum):
@@ -155,6 +156,18 @@ def handle_collision():
         game_state = GameState.GAME_OVER
 
 
+def change_dino_state(new_state):
+    dino.state = new_state
+    if new_state == PlayerState.RUNNING:
+        dino.image = 'dinorun1'
+        dino.y = DINO_STARTING_Y
+    elif new_state == PlayerState.JUMPING:
+        dino.jump_velocity = JUMP_POWER
+    elif new_state == PlayerState.DUCKING:
+        dino.image = 'dinoduck1'
+        dino.y = DINO_CROUCHING_Y
+
+
 def update_dino(time, dt):
 
     if dino.state == PlayerState.RUNNING:
@@ -165,11 +178,10 @@ def update_dino(time, dt):
             dino.last_animation_changed = time
 
         if keyboard.SPACE or keyboard.UP or keyboard.W:
-            dino.state = PlayerState.JUMPING
-            dino.jump_velocity = JUMP_POWER
+            change_dino_state(PlayerState.JUMPING)
 
         if keyboard.S or keyboard.DOWN:
-            dino.state = PlayerState.DUCKING
+            change_dino_state(PlayerState.DUCKING)
 
     elif dino.state == PlayerState.JUMPING:
         dino.jump_velocity += GRAVITY * dt
@@ -177,18 +189,15 @@ def update_dino(time, dt):
 
         if dino.y >= DINO_STARTING_Y:
             dino.y = DINO_STARTING_Y
-            dino.state = PlayerState.RUNNING
+            change_dino_state(PlayerState.RUNNING)
     else:
-
         if keyboard.S or keyboard.DOWN:
             if time - dino.last_animation_changed > dino.animation_length:
                 dino.frame_count += 1
                 dino.image = DUCKING[dino.frame_count % len(DUCKING)]
                 dino.last_animation_changed = time
-
-            dino.state = PlayerState.DUCKING
         else:
-            dino.state = PlayerState.RUNNING
+            change_dino_state(PlayerState.RUNNING)
 
 
 
