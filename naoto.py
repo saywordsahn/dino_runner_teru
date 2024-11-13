@@ -27,10 +27,8 @@ RUNNING = ['dinorun1', 'dinorun2']
 DUCKING = ['dinoduck1', 'dinoduck2']
 FLAPPING = ['bird1', 'bird2']
 
-# todo: ducking
 # todo: different obstacle types
 # todo: OBJECTS!
-# todo: score - high score
 # todo: score - fix orientation
 # todo: score - font
 # todo: start screen
@@ -63,6 +61,7 @@ dino.last_animation_changed = 0.0
 dino.frame_count = 0
 dino.state = PlayerState.RUNNING
 dino.jump_velocity = 0.0
+dino.high_score = 0
 
 
 #############
@@ -125,6 +124,7 @@ def draw():
 
 
     if game_state == GameState.GAME_OVER:
+        screen.draw.text('HI: ' + str(dino.high_score), (873, 60), color='gray', fontname='dinofont', fontsize=32)
         screen.blit('gameover', (WIDTH / 2 - 386 / 2, HEIGHT / 2 - 100))
         reset_button.draw()
 
@@ -153,6 +153,9 @@ def handle_collision():
     if dino.colliderect(cactus):
         change_state(PlayerState.DEAD)
         game_state = GameState.GAME_OVER
+
+        if score > dino.high_score:
+            dino.high_score = score
 
 
 def change_state(new_state):
@@ -246,7 +249,7 @@ def update(dt):
     update_track()
     update_dino(time, dt)
     update_clouds(time)
-    # update_cactus()
+    update_cactus()
     handle_collision()
 
 
